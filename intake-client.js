@@ -10,7 +10,11 @@
   const save=()=>{if(!config)return;try{sessionStorage.setItem(storageKey(config.api_origin),JSON.stringify(attempt));}catch{}};
   const restore=()=>{attempt=null;try{const value=JSON.parse(sessionStorage.getItem(storageKey(config.api_origin))||'null');if(value&&/^[a-zA-Z0-9_-]{32,100}$/.test(value.idem)&&/^[a-zA-Z0-9_-]{40,100}$/.test(value.token)&&typeof value.signature==='string')attempt=value;}catch{}};
   const random=()=>Array.from(crypto.getRandomValues(new Uint8Array(24)),v=>v.toString(16).padStart(2,'0')).join('');
-  const requestHeaders=()=>ownerTest?{'X-Test-Key':testKey}:{};
+  const requestHeaders=(origin=config?.api_origin)=>{
+    const headers=ownerTest?{'X-Test-Key':testKey}:{};
+    if(origin){try{const api=new URL(origin);if(api.protocol==='https:'&&api.hostname.endsWith('.ngrok-free.dev'))headers['ngrok-skip-browser-warning']='1';}catch{}}
+    return headers;
+  };
   const requestName=()=>ownerTest?'Тестовая заявка ':'Заявка ';
   function apiOrigin(value){const api=new URL(value);if(api.protocol!=='https:'||api.username||api.password||api.search||api.hash||api.pathname!=='/')throw new Error('Invalid API');return api.origin;}
   const key=f=>[f.name,f.size,f.lastModified].join('|');
@@ -43,7 +47,7 @@
   const consentLink=document.createElement('a');consentLink.href='./privacy.html';consentLink.target='_blank';consentLink.rel='noopener';consentLink.textContent='условиями обработки документов и контактов';consentLink.style.textDecoration='underline';consentLink.style.textUnderlineOffset='3px';consentText.append(consentLink,'.');
   consent.append(checkbox,consentText);button.before(consent);
   async function enable(value){
-    const health=await fetch(value.api_origin+'/health',{headers:requestHeaders(),signal:AbortSignal.timeout(10000)});
+    const health=await fetch(value.api_origin+'/health',{headers:requestHeaders(value.api_origin),signal:AbortSignal.timeout(10000)});
     if(!health.ok)throw new Error('Intake unavailable');
     const readiness=await health.json();
     if(readiness.intake_enabled!==true&&!(ownerTest&&readiness.test_intake_enabled===true))throw new Error('Intake unavailable');
