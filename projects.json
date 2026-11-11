@@ -60,23 +60,28 @@
       "videos": [
         {
           "src": "rodion-video-01.mov",
-          "title": "Видео с объекта 1"
+          "title": "Видео с объекта 1",
+          "poster": "rodion-video-01-poster.jpg"
         },
         {
           "src": "rodion-video-02.mov",
-          "title": "Видео с объекта 2"
+          "title": "Видео с объекта 2",
+          "poster": "rodion-video-02-poster.jpg"
         },
         {
           "src": "rodion-video-03.mov",
-          "title": "Видео с объекта 3"
+          "title": "Видео с объекта 3",
+          "poster": "rodion-video-03-poster.jpg"
         },
         {
           "src": "rodion-video-04.mov",
-          "title": "Видео с объекта 4"
+          "title": "Видео с объекта 4",
+          "poster": "rodion-video-04-poster.jpg"
         },
         {
           "src": "rodion-video-05.mov",
-          "title": "Видео с объекта 5"
+          "title": "Видео с объекта 5",
+          "poster": "rodion-video-05-poster.jpg"
         }
       ],
       "startedAt": "2026-08-31"
