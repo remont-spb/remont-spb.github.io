@@ -1,1 +1,85 @@
-{"projects":[]}
+{
+  "projects": [
+    {
+      "published": true,
+      "title": "Квартира в «Образцовом квартале»",
+      "stage": "Ремонт в процессе",
+      "description": "Отделка комнат, лоджии и санузла. Показываем текущий вид объекта и детали выполненных работ.",
+      "image": "rodion-photo-10.jpg",
+      "alt": "Комната с обоями с растительным рисунком и напольным покрытием ёлочкой",
+      "photos": [
+        {
+          "src": "rodion-photo-01.jpg",
+          "alt": "Фото с объекта — кадр 1"
+        },
+        {
+          "src": "rodion-photo-02.jpg",
+          "alt": "Фото с объекта — кадр 2"
+        },
+        {
+          "src": "rodion-photo-03.jpg",
+          "alt": "Фото с объекта — кадр 3"
+        },
+        {
+          "src": "rodion-photo-04.jpg",
+          "alt": "Фото с объекта — кадр 4"
+        },
+        {
+          "src": "rodion-photo-05.jpg",
+          "alt": "Фото с объекта — кадр 5"
+        },
+        {
+          "src": "rodion-photo-06.jpg",
+          "alt": "Фото с объекта — кадр 6"
+        },
+        {
+          "src": "rodion-photo-07.jpg",
+          "alt": "Фото с объекта — кадр 7"
+        },
+        {
+          "src": "rodion-photo-08.jpg",
+          "alt": "Фото с объекта — кадр 8"
+        },
+        {
+          "src": "rodion-photo-09.jpg",
+          "alt": "Фото с объекта — кадр 9"
+        },
+        {
+          "src": "rodion-photo-10.jpg",
+          "alt": "Фото с объекта — кадр 10"
+        },
+        {
+          "src": "rodion-photo-11.jpg",
+          "alt": "Фото с объекта — кадр 11"
+        },
+        {
+          "src": "rodion-photo-12.jpg",
+          "alt": "Фото с объекта — кадр 12"
+        }
+      ],
+      "videos": [
+        {
+          "src": "rodion-video-01.mov",
+          "title": "Видео с объекта 1"
+        },
+        {
+          "src": "rodion-video-02.mov",
+          "title": "Видео с объекта 2"
+        },
+        {
+          "src": "rodion-video-03.mov",
+          "title": "Видео с объекта 3"
+        },
+        {
+          "src": "rodion-video-04.mov",
+          "title": "Видео с объекта 4"
+        },
+        {
+          "src": "rodion-video-05.mov",
+          "title": "Видео с объекта 5"
+        }
+      ],
+      "startedAt": "2026-08-31"
+    }
+  ]
+}
