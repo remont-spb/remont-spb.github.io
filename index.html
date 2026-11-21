@@ -447,6 +447,11 @@ body:has(.phone-choice[open]){overflow:hidden}
 .album-stage>button:disabled{opacity:.45}
 .album-stage>button:focus-visible{outline:3px solid white}
 @media(max-width:760px){.album-stage .album-strip img,.album-stage .album-strip video{height:min(128vw,75svh)}}
+</style><style>
+.album-preview{background:transparent}
+.album-stage>button.album-arrow{display:grid;place-items:center;box-sizing:border-box;padding:0;appearance:none;background:rgba(16,47,64,.75);color:white}
+.album-stage>button.album-arrow::before{content:"";display:block;width:16px;height:20px;background:currentColor;clip-path:polygon(67% 8%,81% 21%,41% 50%,81% 79%,67% 92%,15% 50%)}
+.album-stage>button.album-arrow:last-of-type::before{transform:scaleX(-1)}
 </style></head>
 <body id="top">
 <a class="skip" href="#main">Перейти к содержанию</a>
@@ -680,34 +685,28 @@ body:has(.phone-choice[open]){overflow:hidden}
               }
               strip.append(slide);
             });
-            const bar = element('div','album-bar');
-            const counter = element('span');
-            function arrow(label, symbol, step) {
-              const button = element('button','',symbol);
+            function arrow(label, step) {
+              const button = element('button','album-arrow');
               button.type = 'button';
               button.setAttribute('aria-label',label);
               button.onclick = () => strip.scrollBy({left: step * strip.clientWidth,behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth'});
               return button;
             }
-            const prev = arrow('Предыдущий кадр','‹',-1), next = arrow('Следующий кадр','›',1);
+            const prev = arrow('Предыдущий кадр',-1), next = arrow('Следующий кадр',1);
             let current = -1;
             function update() {
               const index = Math.round(strip.scrollLeft / (strip.clientWidth || 1));
               if (index === current) return;
               if (current >= 0) strip.children[current]?.querySelector('video')?.pause();
               current = index;
-              counter.textContent = (index + 1) + ' / ' + items.length;
               prev.disabled = index === 0;
               next.disabled = index === items.length - 1;
             }
             strip.addEventListener('scroll',update,{passive:true});
-            const hint = element('span','album-hint','↔ Листайте');
-            bar.append(prev,hint,counter,next);
             const stage = element('div','album-stage');
             stage.append(strip);
             if (items.length > 1) stage.append(prev, next);
             album.append(stage);
-            if (items.length > 1) album.append(bar);
             cover.replaceWith(album);
             update();
           }
