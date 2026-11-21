@@ -422,6 +422,19 @@ body:has(.phone-choice[open]){overflow:hidden}
   .work-gallery .work-gallery-grid { display: flex; overflow-x: auto; scroll-snap-type: x proximity; gap: 12px; padding-bottom: 8px; }
   .work-gallery-grid > * { flex: 0 0 86%; min-width: 0; scroll-snap-align: start; }
 }
+</style><style>
+.album-preview,.work-card-body,.work-gallery{min-width:0}
+.album-preview{overflow:hidden;background:#102f40;align-self:start}
+.album-strip{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none}
+.album-strip>*{flex:0 0 100%;min-width:0;scroll-snap-align:start;margin:0}
+.album-strip img,.album-strip video{display:block;width:100%;height:clamp(250px,42vw,440px);object-fit:contain}
+.album-strip figcaption{color:white;padding:4px 12px}
+.album-bar{display:flex;align-items:center;gap:12px;padding:4px 10px;color:white;font-size:14px}
+.album-bar button{width:44px;height:44px;color:white;background:transparent;border:0;font-size:32px;cursor:pointer}
+.album-bar button:disabled{opacity:.35}
+.album-hint{margin-right:auto}
+@media(max-width:760px){.work-card{grid-template-columns:minmax(0,1fr)}.album-strip img,.album-strip video,.work-gallery-grid img,.work-gallery-grid video{height:clamp(230px,100vw,56svh);object-fit:contain;background:#102f40}}
+@media(prefers-reduced-motion:no-preference){.album-hint{animation:album-nudge .8s ease-in-out 2 alternate}@keyframes album-nudge{to{transform:translateX(5px)}}}
 </style></head>
 <body id="top">
 <a class="skip" href="#main">Перейти к содержанию</a>
@@ -642,7 +655,46 @@ body:has(.phone-choice[open]){overflow:hidden}
             photos.forEach((photo,i)=>{const link=element('a','work-photo');link.href=imageURL(photo.src);link.target='_blank';link.rel='noopener';link.setAttribute('aria-label',`Открыть фото ${i+1} в полном размере`);const image=element('img');image.src=imageURL(photo.src);image.alt=photo.alt||`Фото ${i+1}`;image.loading='lazy';image.width=960;image.height=1280;link.append(image);gallery.append(link);});
             if(videos.length){const heading=element('h4','work-videos-title','Видео с объекта');gallery.append(heading);}
             videos.forEach((video,i)=>{const figure=element('figure','work-video');const player=element('video');player.controls=true;player.playsInline=true;player.preload='none';player.src=imageURL(video.src);if(imageURL(video.poster))player.poster=imageURL(video.poster);player.setAttribute('aria-label',video.title||`Видео ${i+1}`);const fallback=element('a','', 'Открыть видео');fallback.href=player.src;player.append(fallback);figure.append(player,element('figcaption','',video.title||`Видео ${i+1}`));gallery.append(figure);});
-            details.addEventListener('toggle',()=>{if(!details.open)details.querySelectorAll('video').forEach(v=>v.pause());});details.append(gallery);card.append(details);cover.addEventListener('click',()=>{details.open=true;toggle.focus();details.scrollIntoView({behavior:'smooth',block:'start'});});
+            details.addEventListener('toggle',()=>{if(!details.open)details.querySelectorAll('video').forEach(v=>v.pause());});details.append(gallery);card.append(details);const album = element('div','album-preview');
+            const strip = element('div','album-strip');
+            strip.setAttribute('aria-label','Фото и видео объекта');
+            strip.tabIndex = 0;
+            const items = [...gallery.querySelectorAll('.work-photo,.work-video')];
+            items.forEach(item => {
+              const slide = item.cloneNode(true);
+              if (slide.matches('.work-photo')) {
+                slide.className = 'album-photo';
+                slide.addEventListener('click', event => { event.preventDefault(); item.click(); });
+              }
+              strip.append(slide);
+            });
+            const bar = element('div','album-bar');
+            const counter = element('span');
+            function arrow(label, symbol, step) {
+              const button = element('button','',symbol);
+              button.type = 'button';
+              button.setAttribute('aria-label',label);
+              button.onclick = () => strip.scrollBy({left: step * strip.clientWidth,behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth'});
+              return button;
+            }
+            const prev = arrow('Предыдущий кадр','‹',-1), next = arrow('Следующий кадр','›',1);
+            let current = -1;
+            function update() {
+              const index = Math.round(strip.scrollLeft / (strip.clientWidth || 1));
+              if (index === current) return;
+              if (current >= 0) strip.children[current]?.querySelector('video')?.pause();
+              current = index;
+              counter.textContent = (index + 1) + ' / ' + items.length;
+              prev.disabled = index === 0;
+              next.disabled = index === items.length - 1;
+            }
+            strip.addEventListener('scroll',update,{passive:true});
+            const hint = element('span','album-hint','↔ Листайте');
+            bar.append(prev,hint,counter,next);
+            album.append(strip);
+            if (items.length > 1) album.append(bar);
+            cover.replaceWith(album);
+            update();
           }
           fragment.append(card);
         }
