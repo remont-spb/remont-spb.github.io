@@ -452,6 +452,10 @@ body:has(.phone-choice[open]){overflow:hidden}
 .album-stage>button.album-arrow{display:grid;place-items:center;box-sizing:border-box;padding:0;appearance:none;background:rgba(16,47,64,.75);color:white}
 .album-stage>button.album-arrow::before{content:"";display:block;width:16px;height:20px;background:currentColor;clip-path:polygon(67% 8%,81% 21%,41% 50%,81% 79%,67% 92%,15% 50%)}
 .album-stage>button.album-arrow:last-of-type::before{transform:scaleX(-1)}
+</style><style>
+.album-overlay-hint,.album-overlay-count{position:absolute;bottom:10px;color:white;background:transparent;font:500 12px/1.3 Manrope,sans-serif;text-shadow:0 1px 3px #000,0 0 2px #000;pointer-events:none}
+.album-overlay-hint{left:12px}.album-overlay-count{right:12px;font-variant-numeric:tabular-nums}
+.album-stage:has(.work-video video:focus-visible) .album-overlay-hint,.album-stage:has(.work-video video:focus-visible) .album-overlay-count{visibility:hidden}
 </style></head>
 <body id="top">
 <a class="skip" href="#main">Перейти к содержанию</a>
@@ -693,19 +697,22 @@ body:has(.phone-choice[open]){overflow:hidden}
               return button;
             }
             const prev = arrow('Предыдущий кадр',-1), next = arrow('Следующий кадр',1);
+            const hint = element('span','album-overlay-hint','Листайте');
+            const count = element('span','album-overlay-count');
             let current = -1;
             function update() {
               const index = Math.round(strip.scrollLeft / (strip.clientWidth || 1));
               if (index === current) return;
               if (current >= 0) strip.children[current]?.querySelector('video')?.pause();
               current = index;
+              count.textContent = (index + 1) + ' / ' + items.length;
               prev.disabled = index === 0;
               next.disabled = index === items.length - 1;
             }
             strip.addEventListener('scroll',update,{passive:true});
             const stage = element('div','album-stage');
             stage.append(strip);
-            if (items.length > 1) stage.append(prev, next);
+            if (items.length > 1) stage.append(prev, next, hint, count);
             album.append(stage);
             cover.replaceWith(album);
             update();
