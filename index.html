@@ -435,6 +435,18 @@ body:has(.phone-choice[open]){overflow:hidden}
 .album-hint{margin-right:auto}
 @media(max-width:760px){.work-card{grid-template-columns:minmax(0,1fr)}.album-strip img,.album-strip video,.work-gallery-grid img,.work-gallery-grid video{height:clamp(230px,100vw,56svh);object-fit:contain;background:#102f40}}
 @media(prefers-reduced-motion:no-preference){.album-hint{animation:album-nudge .8s ease-in-out 2 alternate}@keyframes album-nudge{to{transform:translateX(5px)}}}
+</style><style>
+.album-stage{position:relative}
+.album-stage .album-strip img,.album-stage .album-strip video{height:clamp(340px,48vw,580px);object-fit:cover}
+.album-stage .album-strip figcaption{position:absolute;bottom:0;left:0;background:#102f40da}
+.album-stage .work-video{position:relative}
+.album-stage .work-video figcaption{display:none}
+.album-stage>button{position:absolute;z-index:1;top:50%;transform:translateY(-50%);width:44px;height:44px;border-radius:50%;border:1px solid #fff9;background:#102f40bb;color:white;font:32px/1 sans-serif;cursor:pointer}
+.album-stage>button:first-of-type{left:8px}
+.album-stage>button:last-of-type{right:8px}
+.album-stage>button:disabled{opacity:.45}
+.album-stage>button:focus-visible{outline:3px solid white}
+@media(max-width:760px){.album-stage .album-strip img,.album-stage .album-strip video{height:min(128vw,75svh)}}
 </style></head>
 <body id="top">
 <a class="skip" href="#main">Перейти к содержанию</a>
@@ -691,7 +703,10 @@ body:has(.phone-choice[open]){overflow:hidden}
             strip.addEventListener('scroll',update,{passive:true});
             const hint = element('span','album-hint','↔ Листайте');
             bar.append(prev,hint,counter,next);
-            album.append(strip);
+            const stage = element('div','album-stage');
+            stage.append(strip);
+            if (items.length > 1) stage.append(prev, next);
+            album.append(stage);
             if (items.length > 1) album.append(bar);
             cover.replaceWith(album);
             update();
