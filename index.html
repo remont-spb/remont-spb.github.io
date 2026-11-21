@@ -697,7 +697,6 @@ body:has(.phone-choice[open]){overflow:hidden}
               return button;
             }
             const prev = arrow('Предыдущий кадр',-1), next = arrow('Следующий кадр',1);
-            const hint = element('span','album-overlay-hint','Листайте');
             const count = element('span','album-overlay-count');
             let current = -1;
             function update() {
@@ -712,7 +711,7 @@ body:has(.phone-choice[open]){overflow:hidden}
             strip.addEventListener('scroll',update,{passive:true});
             const stage = element('div','album-stage');
             stage.append(strip);
-            if (items.length > 1) stage.append(prev, next, hint, count);
+            if (items.length > 1) stage.append(prev, next, count);
             album.append(stage);
             cover.replaceWith(album);
             update();
